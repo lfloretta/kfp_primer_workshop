@@ -1,0 +1,24 @@
+name: Help Spark job on Dataproc
+description: Upload files needed to run a pyspark job on dataproc
+inputs:
+  - name: output_gcs_path
+    type: GCSPath
+    description: GSC path template where to write the output
+outputs:
+  - name: transform_run_path
+    type: GCSPath
+    description: GCS path to transform_run.py
+  - name: jar_path
+    type: GCSPath
+    description: GCS path to jar file
+
+implementation:
+  container:
+    image: gcr.io/lf-ml-demo/kfp_workshop/spark/load_file_to_gcs@sha256:6604034ff67157f0d5e588ace3a8742ae765401733c74271c84b83467d444574
+    command: ["python3", "/pipelines/component/src/load_files_to_GCS.py"]
+    args:
+      - --gcs-path
+      - inputValue: output_gcs_path
+    fileOutputs:
+      transform_run_path: /tmp/kfp/output/pyspark/transform_run.txt
+      jar_path: /tmp/kfp/output/pyspark/jar_path.txt

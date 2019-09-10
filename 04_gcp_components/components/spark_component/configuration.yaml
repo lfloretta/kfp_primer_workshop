@@ -1,0 +1,44 @@
+name: Spark on DataProc - select data from BigQuery and write to gcs 
+description: downloads columns from BigQuery Table and write the results to gcs 
+
+inputs:
+- {name: clusterProject, type: String, description: 'GCP project of the DataProc cluster'}
+- {name: cluster, type: String, description: 'DataProc cluster name'}
+- {name: region, type: String, description: 'Region of DataProc cluster'}
+- {name: staging, type: String, description: 'Staging bucket for jar dependencies and spark run file'}
+- {name: project, type: String, description: 'GCS Project of the output bucket'}
+- {name: dataset, type: String, description: 'Dataset name to read from'}
+- {name: tableProject, type: String, description: 'GCP Project of the BigQuery table to read from'}
+- {name: table, type: String, description: 'BigQuery table name to read from'}
+- {name: runfile, 
+  type: String, 
+  description: 'URI to pyspark main program file. This is set to the correct path by default.',
+  default: 'transform_run.py'}
+- {name: uberjar, 
+  type: String, 
+  description: 'URI to JAR dependencies that the Spark job requires',
+  default: 'target/sparkicson-0.1-dependencies.jar'}
+- {name: keyfile, type: String, description: 'URI to JSON file', default: ''}
+- {name: output, type: String, description: 'URI for the output on Google Cloud Storage. E.g., gs://somebucket/file.csv'}
+outputs:
+- {name: outputfile, type: GCSPath, description: 'URI for the output-file'}
+
+implementation:
+  container:
+    image: 'gcr.io/sparkpubsub/sparkbqread:latest'
+    command: [
+      python, ./src/transform.py, # Path of the program inside the container
+      --output-file, {outputPath: outputfile},
+      --output, {inputValue: output},
+      --clusterProject, {inputValue: clusterProject},
+      --cluster, {inputValue: cluster},
+      --region, {inputValue: region},
+      --staging, {inputValue: staging},
+      --project, {inputValue: project},
+      --dataset, {inputValue: dataset},
+      --tableProject, {inputValue: tableProject},
+      --table, {inputValue: table},
+      --runfile, {inputValue: runfile},
+      --uberjar, {inputValue: uberjar},
+      --keyfile, {inputValue: keyfile},
+    ]

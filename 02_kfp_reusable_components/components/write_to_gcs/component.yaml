@@ -1,0 +1,26 @@
+name: primer - Write to GCS
+description: Write an input string array to GCS
+
+inputs:
+  - name: output_uri_template
+    type: GCSPath
+    description: GSC path template where to write the output
+  - name: content
+    type: String
+    default: 'Ciao'
+    description: String to write to file
+outputs:
+  - name: output_uri
+    type: GCSPath
+    description: Actual value of output_uri_template
+implementation:
+  container:
+    image: gcr.io/lf-ml-demo/kfp_workshop/write_to_gcs@sha256:dbdec5c03727c7440f3ea0477a708d217c23d18c3f1eb2422dd967fc77fe34c2
+    command: ["python3", "/pipelines/component/src/write_to_gcs.py"]
+    args:
+      - --output-file-name
+      - inputValue: output_uri_template
+      - --content
+      - inputValue: content
+      - --output-file-name-store
+      - outputPath: output_uri

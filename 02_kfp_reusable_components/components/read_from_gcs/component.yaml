@@ -1,0 +1,17 @@
+name: primer - Read from GCS
+description: Read a numpy array from GCS and find max
+
+inputs:
+  - name: input_file_name
+    type: GCSPath
+    description: GSC path from where to read
+
+implementation:
+  container:
+    image: gcr.io/lf-ml-demo/kfp_workshop/read_from_gcs@sha256:ffa196363ffc8c863b7b03e1277f4538423d77388f9aa8d1f6891b61ce06f811
+    command: [
+      python3, /pipelines/component/src/read_from_gcs.py,
+      --input-file-name, {inputValue: input_file_name}
+    ]
+
+

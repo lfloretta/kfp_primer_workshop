@@ -1,0 +1,20 @@
+name: Scikit trainer
+description: Trains a scikit learn model on kubeflow
+inputs:
+- {name: pathdata, type: GcsPath, description: 'Path to data on gcs'}
+- {name: storage, type: String, description: 'Where your data is stored: BQ or GCS'}
+- {name: pathoutput, type: GcsPath, description: 'Path to bigquery table'}
+- {name: bqtable, type: String, description: 'GCS Bucket to output the trained model as model.joblib'}
+outputs:
+- {name: pathoutputfile, type: String, description: 'Name to write'}
+implementation:
+  container:
+    image: gcr.io/kfp-primer-workshop/kfp/scikit-train@sha256:4caab5dd0d42d0802fa4c2fedcb3efb260314d42978fb88cce251d771fa50918
+    command: [python3, /pipelines/component/src/trainer/task.py]
+    args: [ 
+      --pathdata, {inputValue: pathdata},
+      --storage, {inputValue: storage},
+      --pathoutput, {inputValue: pathoutput},
+      --bqtable, {inputValue: bqtable},
+      --pathoutputfile, {outputPath: pathoutputfile},
+    ]
