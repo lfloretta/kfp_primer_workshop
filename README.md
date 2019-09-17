@@ -1,1 +1,1 @@
-KFP exercises created by EMEA ML Specialist team (repo: gcp-emea-ml)
+# KFP exercises created by EMEA ML Specialist team
