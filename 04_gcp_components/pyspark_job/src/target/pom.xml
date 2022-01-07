@@ -14,7 +14,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <google-cloud-bigdataoss.version>1.9.17</google-cloud-bigdataoss.version>
     <spark-bigquery_2.11.version>0.8.0-beta</spark-bigquery_2.11.version> 
-    <protobuf-java.version>3.6.1</protobuf-java.version>
+    <protobuf-java.version>3.16.1</protobuf-java.version>
   </properties>
 
 	 <build>
